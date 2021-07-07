@@ -1,5 +1,10 @@
 {
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "formattingToggle.affects": ["formatOnSave"]
+    "formattingToggle.affects": [
+        "formatOnSave"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }
