@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
+import '@shared/typeorm'; //só de fazer o import, a função createConnection ja é chamada no arquivo index.ts.
 
 const app = express();
 
@@ -11,7 +12,6 @@ app.use(express.json());
 
 app.use(routes);
 
-//Middleware para tratamento de erros de forma personalizada
 app.use(
     (
         error: Error,
@@ -19,8 +19,6 @@ app.use(
         response: Response,
         next: NextFunction,
     ) => {
-        //Se o erro for do nosso tipo personalizado, então ele
-        //foi gerado pela aplicação. Vamos usar as informações do erro.
         if (error instanceof AppError) {
             return response.status(error.statusCode).json({
                 status: 'error',
@@ -28,8 +26,6 @@ app.use(
             });
         }
 
-        //Se chegar aqui é porque o erro não foi gerado por nós.
-        //Então vamos devolver um erro 500 com a mensagem Internal server error.
         return response.status(500).json({
             status: 'error',
             message: 'Internal server error',
