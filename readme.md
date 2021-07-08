@@ -21,7 +21,7 @@ Exemplo:
       "./src/shared/typeorm/migrations/*.ts"
     ],
     "cli": {
-      "migrationDir": "./src/shared/typeorm/migrations"
+      "migrationsDir": "./src/shared/typeorm/migrations"
     }
 }
 ```
