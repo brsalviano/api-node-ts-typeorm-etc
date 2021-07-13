@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
+import 'express-async-errors'; //Este import é necessário para que nossos erros personalizados sejam mostrados quando for assincrono.
 import cors from 'cors';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
