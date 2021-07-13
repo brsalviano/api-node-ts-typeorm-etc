@@ -1,10 +1,11 @@
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
-import 'express-async-errors'; //Este import é necessário para que nossos erros personalizados sejam mostrados quando for assincrono.
+import 'express-async-errors';
 import cors from 'cors';
+import { errors } from 'celebrate';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
-import '@shared/typeorm'; //só de fazer o import, a função createConnection ja é chamada no arquivo index.ts.
+import '@shared/typeorm';
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use(routes);
+
+app.use(errors());
 
 app.use(
     (

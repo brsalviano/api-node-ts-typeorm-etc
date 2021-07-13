@@ -29,9 +29,6 @@ class Product {
     updated_at: Date;
 
     constructor() {
-        //Só geramos o uuid se não estiver preenchido
-        //pois se já estiver preenchido é porque provavelmente
-        //estamos atualizando.
         if (!this.id) {
             this.id = uuid();
         }

@@ -16,27 +16,22 @@ class CreateProductService {
         price,
         quantity,
     }: IRequest): Promise<Product> {
-        //Carregar o repositório
         const productsRepository = getCustomRepository(ProductRepository);
 
-        //Verificar se o produto ja existe...
         const productExists = await productsRepository.findByName(name);
 
         if (productExists) {
             throw new AppError('There is already one product with this name');
         }
 
-        //Criar uma entidade do produto
         const product = productsRepository.create({
             name,
             price,
             quantity,
         });
 
-        //salvar o produto
         await productsRepository.save(product);
 
-        //Retornar o produto criado
         return product;
     }
 }
