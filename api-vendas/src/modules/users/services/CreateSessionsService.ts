@@ -1,5 +1,6 @@
 import AppError from '@shared/errors/AppError';
-import { compare } from 'bcryptjs'; //Vamos usar a função de comparação do módulo bcryptjs
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken'; //para gerar o token
 import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
@@ -11,6 +12,7 @@ interface IRequest {
 
 interface IResponse {
     user: User;
+    token: string;
 }
 
 class CreateSessionsService {
@@ -32,8 +34,14 @@ class CreateSessionsService {
             throw new AppError('Incorrect email/password combination.', 401);
         }
 
-        //Devolvo o usuário
-        return { user };
+        //Gero o token
+        const token = sign({}, 'secret', {
+            subject: user.id,
+            expiresIn: '1d',
+        });
+
+        //Devolvo o usuário e o token gerado
+        return { user, token };
     }
 }
 
