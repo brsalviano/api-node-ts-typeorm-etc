@@ -1,6 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import { compare } from 'bcryptjs';
-import { sign } from 'jsonwebtoken'; //para gerar o token
+import { sign } from 'jsonwebtoken';
+import authConfig from '@config/auth'; //Agora as configurações do jwt são carregadas pelo arquivo específico.
 import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
@@ -18,29 +19,24 @@ interface IResponse {
 class CreateSessionsService {
     public async execute({ email, password }: IRequest): Promise<IResponse> {
         const usersRepository = getCustomRepository(UsersRepository);
-        //Pego o usuário pelo email
+
         const user = await usersRepository.findByEmail(email);
 
-        //Se não existir, envio a mensagem de erro
         if (!user) {
             throw new AppError('Incorrect email/password combination.', 401);
         }
 
-        //Comparo a senha
         const passwordConfirmed = await compare(password, user.password);
 
-        //Se a senha estiver errada, devolvo um erro
         if (!passwordConfirmed) {
             throw new AppError('Incorrect email/password combination.', 401);
         }
 
-        //Gero o token
-        const token = sign({}, 'secret', {
+        const token = sign({}, authConfig.jwt.secret, {
             subject: user.id,
-            expiresIn: '1d',
+            expiresIn: authConfig.jwt.expiresIn,
         });
 
-        //Devolvo o usuário e o token gerado
         return { user, token };
     }
 }
