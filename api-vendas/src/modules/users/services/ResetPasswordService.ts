@@ -38,6 +38,9 @@ class ResetPasswordService {
 
         //Se chegar aqui, vamos atualizar a senha...
         user.password = await hash(password, 8);
+
+        //Não esqueça de salvar no banco.
+        await usersRepository.save(user);
     }
 }
 
